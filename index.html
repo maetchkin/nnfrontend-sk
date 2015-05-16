@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-	<title>getUserMedia Demo</title>
+	<title>Yandex SpeechKit Cloud API Demo</title>
 	<style>
 		* {
 			font-family: Arial;
@@ -27,7 +27,7 @@
 	
   </head>
   <body>
-	<h1>speechkit API</h1>
+	<h1>Yandex SpeechKit Cloud API Demo</h1>
 	<button id="recBut" onclick="recognize()">начать</button>
 	<div id="recRes">
 	</div>
@@ -39,7 +39,8 @@
 		ya.speechkit.settings = {
 			model: 'freeform', // Model name for recognition process
 			lang: 'ru-RU', //Language for recognition process
-			apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39'
+			apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39',
+			format: ya.speechkit.FORMAT.PCM44
 		};
 
 		var rec = false,
@@ -119,7 +120,7 @@
 				ya.speechkit.recognize({
 					doneCallback: function(text) {
 						recBut.innerHTML = "секундочку...";
-						recRes.innerHTML += search(text);
+						recRes.innerHTML = search(text);
 						
 						recBut.innerHTML = "начать";
 						rec = false;
