@@ -51,31 +51,55 @@
   </head>
   <body>
 	<h1>speechkit API</h1>
+	<button id="recBut" onclick="recognize()">начать</button>
+	<div id="recRes">
+	</div>
 	<script type="text/javascript" src="http://download.yandex.ru/webspeechkit/webspeechkit-1.0.0.js"></script>
 
 	<script>
+		
 		ya.speechkit.settings = {
 			model: 'freeform', // Model name for recognition process
 			lang: 'ru-RU', //Language for recognition process
 			apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39'
 		};
+
+		var rec = false,
+			recBut = document.getElementById("recBut"),
+			recRes = document.getElementById("recRes");
 		
-		ya.speechkit.recognize({
-		  doneCallback: function(text) {
-			console.log("You've said: " + text);
-		  },
-			initCallback: function () {
-			console.log("You may speak now");
-		  },
-		  errorCallback: function(err) {
-			console.log("Something gone wrong: " + err);
-		  },
-		  model: 'freeform', // Model name for recognition process
-		  lang: 'ru-RU', //Language for recognition process
-		  apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39'
-		  }
-		 );
+		function recognize() {
+			if(!rec){
+				recBut.innerHTML= "секундочку...";
+				ya.speechkit.recognize({
+					doneCallback: function(text) {
+						recRes.innerHTML = text;
+					},
+					initCallback: function () {
+						recBut.innerHTML= "Я вас внимательно, говорите";
+					},
+					errorCallback: function(err) {
+						recBut.innerHTML= "Ошибочка";
+					},
+					model: 'freeform', // Model name for recognition process
+					lang: 'ru-RU', //Language for recognition process
+					apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39'
+				});
+
+
+				
+			}else{
+				recBut.innerHTML= "начать";
+			}
+			rec = !rec;
+		}
+
+		function _recognize() {
+			
+		}
 	</script>
+
+	
 	
 
 	
