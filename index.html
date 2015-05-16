@@ -6,7 +6,23 @@
 
 	<title>getUserMedia Demo</title>
 	<style>
-
+		* {
+			font-family: Arial;
+		}
+		.result{
+			display: inline-block;
+			margin: 0 5px;
+			padding: .5em;
+			box-shadow: 0 0 1px grey;
+		}
+		.result-key{
+			display: inline-block;
+			width: 250px;
+			font-family: monospace;
+			padding: .2em;
+			background-color: #FFA;
+			margin: 2px;
+		}
 	</style>
 	
   </head>
@@ -44,6 +60,22 @@
 			return f ? r : f;
 		}
 
+		function searchResultFormat(result){
+
+			var r = '';
+			result.forEach(
+				function(eventRes){
+					r += '<p class=result>';
+					for (var k in eventRes) {
+						r += "<i class='result-key'>" + k + "</i>: " + eventRes[k] + '<br/>';
+					};
+					r += '</p>';
+				}
+			);
+			
+			return r;
+		}
+
 		function search(text) {
 			var res = "<hr>" + "<b>запрос: " + text + "</b><br>",
 				words = text.split(' '),
@@ -68,14 +100,13 @@
 			for (var w in result) {
 				if (result[w] !== false) {
 					f = true;
-					res += "";
+					res += "<br>" + searchResultFormat( result[w] )
 				}
 			};
 
 			if (f === false) {
 				res += "<b>ничего не найдено</b>";
 			}
-
 
 			return res;
 		}
@@ -84,6 +115,7 @@
 			if(!rec){
 				rec = true;
 				recBut.innerHTML= "секундочку...";
+
 				ya.speechkit.recognize({
 					doneCallback: function(text) {
 						recBut.innerHTML = "секундочку...";
