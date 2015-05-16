@@ -73,13 +73,13 @@
 				recBut.innerHTML= "секундочку...";
 				ya.speechkit.recognize({
 					doneCallback: function(text) {
-						recRes.innerHTML = text;
+						recRes.innerHTML += recRes.innerHTML + '<br/>' + text;
 					},
 					initCallback: function () {
-						recBut.innerHTML= "Я вас внимательно, говорите";
+						recBut.innerHTML = "говорите отчетливо, в дырочку";
 					},
 					errorCallback: function(err) {
-						recBut.innerHTML= "Ошибочка";
+						recBut.innerHTML= "Вас много я одна";
 					},
 					model: 'freeform', // Model name for recognition process
 					lang: 'ru-RU', //Language for recognition process
