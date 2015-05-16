@@ -6,46 +6,7 @@
 
 	<title>getUserMedia Demo</title>
 	<style>
-	  body
-	  {
-		max-width: 500px;
-		margin: 2em auto;
-		font-size: 20px;
-	  }
- 
-	  h1
-	  {
-		text-align: center;
-	  }
-		  
-	  .buttons-wrapper
-	  {
-		text-align: center;
-	  }
- 
-	  .hidden
-	  {
-		display: none;
-	  }
- 
-	  #video
-	  {
-		display: block;
-		width: 100%;
-	  }
- 
-	  .button-demo
-	  {
-		padding: 0.5em;
-		display: inline-block;
-		margin: 1em auto;
-	  }
- 
-	  .author
-	  {
-		display: block;
-		margin-top: 1em;
-	  }
+
 	</style>
 	
   </head>
@@ -54,6 +15,7 @@
 	<button id="recBut" onclick="recognize()">начать</button>
 	<div id="recRes">
 	</div>
+	<script type="text/javascript" src="./events.js"></script>
 	<script type="text/javascript" src="http://download.yandex.ru/webspeechkit/webspeechkit-1.0.0.js"></script>
 
 	<script>
@@ -68,12 +30,67 @@
 			recBut = document.getElementById("recBut"),
 			recRes = document.getElementById("recRes");
 		
+		function searchInEvent(word, event) {
+			var r = {id: event.id},
+				f = false;
+			for(var k in event){
+				if(k==='title' || k==='description' || k==='place'){
+					if(typeof event[k] === 'string' && event[k].toLowerCase().indexOf( word.toLowerCase() ) !== -1){
+						r[k] = event[k];
+						f = true;
+					}
+				}
+			}
+			return f ? r : f;
+		}
+
+		function search(text) {
+			var res = "<hr>" + "<b>запрос: " + text + "</b><br>",
+				words = text.split(' '),
+				result = {},
+				f = false;
+
+			words.forEach(
+				function(word){
+					result[word] = [];
+					events.forEach(
+						function(eventC){
+							var subRes = searchInEvent(word, eventC);
+							if(subRes){
+								result[word].push(subRes);
+							}
+						}
+					);
+					result[word] = result[word].length > 0 ? result[word] : false; 
+				}
+			);
+
+			for (var w in result) {
+				if (result[w] !== false) {
+					f = true;
+					res += "";
+				}
+			};
+
+			if (f === false) {
+				res += "<b>ничего не найдено</b>";
+			}
+
+
+			return res;
+		}
+
 		function recognize() {
 			if(!rec){
+				rec = true;
 				recBut.innerHTML= "секундочку...";
 				ya.speechkit.recognize({
 					doneCallback: function(text) {
-						recRes.innerHTML += recRes.innerHTML + '<br/>' + text;
+						recBut.innerHTML = "секундочку...";
+						recRes.innerHTML += search(text);
+						
+						recBut.innerHTML = "начать";
+						rec = false;
 					},
 					initCallback: function () {
 						recBut.innerHTML = "говорите отчетливо, в дырочку";
@@ -85,13 +102,12 @@
 					lang: 'ru-RU', //Language for recognition process
 					apiKey: '9916cf26-2725-46f7-a6a6-430db1d09c39'
 				});
-
-
 				
-			}else{
-				recBut.innerHTML= "начать";
+				
+			} else {
+				alert("Бейби донт хёрт ми, донт хёрт ми, ноу мо");
 			}
-			rec = !rec;
+
 		}
 
 		function _recognize() {
